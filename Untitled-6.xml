@@ -1,0 +1,14 @@
+
+// MainPage.xaml
+<VerticalStackLayout Spacing="20" Padding="30">
+    <Button Text="Select and Upload Document" Clicked="UploadFile" />
+    <CollectionView x:Name="DocumentList">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame BorderColor="Gray" Padding="10" Margin="5">
+                    <Label Text="{Binding FileName}" />
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</VerticalStackLayout>
