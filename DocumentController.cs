@@ -17,6 +17,10 @@ public class DocumentController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest("Invalid file.");
 
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == uploadedBy);
+        if (user == null)
+            return BadRequest("Invalid uploader.");
+
         var uploadsPath = Path.Combine(_env.ContentRootPath, "Uploads");
         if (!Directory.Exists(uploadsPath))
             Directory.CreateDirectory(uploadsPath);
@@ -32,7 +36,8 @@ public class DocumentController : ControllerBase
             FileName = file.FileName,
             FilePath = filePath,
             UploadDate = DateTime.UtcNow,
-            UploadedBy = uploadedBy
+            UploadedBy = uploadedBy,
+            Tier = user.Tier
         };
 
         _context.Documents.Add(document);
@@ -42,9 +47,24 @@ public class DocumentController : ControllerBase
     }
 
     [HttpGet("list")]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List([FromQuery] string username)
     {
-        var docs = await _context.Documents.ToListAsync();
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (user == null)
+            return BadRequest("Invalid user.");
+
+        List<string> accessibleTiers = user.Tier switch
+        {
+            "Tier1" => new List<string> { "Tier1", "Tier2", "Tier3" },
+            "Tier2" => new List<string> { "Tier2", "Tier3" },
+            "Tier3" => new List<string> { "Tier3" },
+            _ => new List<string>()
+        };
+
+        var docs = await _context.Documents
+            .Where(d => accessibleTiers.Contains(d.Tier))
+            .ToListAsync();
+
         return Ok(docs);
     }
 }
