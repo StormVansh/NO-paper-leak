@@ -6,8 +6,8 @@ public class Document
     public string FilePath { get; set; }
     public DateTime UploadDate { get; set; }
     public string UploadedBy { get; set; }
+    public string Tier { get; set; }
 }
-
 
 
 
