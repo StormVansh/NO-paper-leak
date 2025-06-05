@@ -1,0 +1,16 @@
+<VerticalStackLayout Spacing="20" Padding="30">
+    <Entry x:Name="UsernameEntry" Placeholder="Enter Username" />
+    <Entry x:Name="AccessCodeEntry" Placeholder="Access Code (if any)" />
+    <Button Text="Join or Register" Clicked="RegisterOrJoin" />
+
+    <Button Text="Select and Upload Document" Clicked="UploadFile" />
+    <CollectionView x:Name="DocumentList">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame BorderColor="Gray" Padding="10" Margin="5">
+                    <Label Text="{Binding FileName}" />
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</VerticalStackLayout>
